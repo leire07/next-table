@@ -1,0 +1,68 @@
+import React from "react";
+
+export const users = [
+    {
+      key:1,
+      name: "sample_0.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: null,
+      is_regenerating: false,
+      requires_user_validation: false,
+    },
+    {
+      key:2,
+      name: "sample_1.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: "17/06/2023",
+      is_regenerating: false,
+      requires_user_validation: false,
+    },
+    {
+      key:3,
+      name: "sample_2.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: null,
+      is_regenerating: true,
+      requires_user_validation: false,
+    },
+    {
+      key:4,
+      name: "sample_3.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: null,
+      is_regenerating: false,
+      requires_user_validation: true,
+    },
+    {
+      key:5,
+      name: "sample_02.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: null,
+      is_regenerating: false,
+      requires_user_validation: false,
+    },
+    {
+      key:6,
+      name: "sample_12.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: "17/06/2023",
+      is_regenerating: false,
+      requires_user_validation: false,
+    },
+    {
+      key:7,
+      name: "sample_22.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: null,
+      is_regenerating: true,
+      requires_user_validation: false,
+    },
+    {
+      key:8,
+      name: "sample_32.vcf",
+      creation_date: "01/01/2023",
+      last_update_date: "24/10/2023",
+      is_regenerating: false,
+      requires_user_validation: true,
+    },
+  ];
