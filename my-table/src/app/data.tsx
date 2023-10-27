@@ -1,13 +1,14 @@
 import React from "react";
 
-export const users = [
+
+export const data = [
     {
       key:1,
       name: "sample_0.vcf",
       creation_date: "01/01/2023",
       last_update_date: null,
       is_regenerating: false,
-      requires_user_validation: false,
+      requires_user_validation: true,
     },
     {
       key:2,
@@ -19,7 +20,7 @@ export const users = [
     },
     {
       key:3,
-      name: "sample_2.vcf",
+      name: "irene.vcf",
       creation_date: "01/01/2023",
       last_update_date: null,
       is_regenerating: true,
@@ -27,15 +28,15 @@ export const users = [
     },
     {
       key:4,
-      name: "sample_3.vcf",
+      name: "manolo.vcf",
       creation_date: "01/01/2023",
       last_update_date: null,
       is_regenerating: false,
-      requires_user_validation: true,
+      requires_user_validation: false,
     },
     {
       key:5,
-      name: "sample_02.vcf",
+      name: "oscar.vcf",
       creation_date: "01/01/2023",
       last_update_date: null,
       is_regenerating: false,
@@ -43,7 +44,7 @@ export const users = [
     },
     {
       key:6,
-      name: "sample_12.vcf",
+      name: "mireia.vcf",
       creation_date: "01/01/2023",
       last_update_date: "17/06/2023",
       is_regenerating: false,
@@ -51,7 +52,7 @@ export const users = [
     },
     {
       key:7,
-      name: "sample_22.vcf",
+      name: "alberto.vcf",
       creation_date: "01/01/2023",
       last_update_date: null,
       is_regenerating: true,
@@ -59,10 +60,37 @@ export const users = [
     },
     {
       key:8,
-      name: "sample_32.vcf",
+      name: "leire.vcf",
       creation_date: "01/01/2023",
       last_update_date: "24/10/2023",
       is_regenerating: false,
       requires_user_validation: true,
     },
+  ];
+
+  export const columns = [
+    {
+      key: "name",
+      label: "FILE NAME",
+    },
+    {
+      key: "creation_date",
+      label: "UPLOAD DATE",
+    },
+    {
+      key: "last_update_date",
+      label: "LAST REPORT DATE",
+    },
+    {
+      key: "Detailed_report",
+      label: "DETAILED REPORT",
+    },
+    {
+      key: "Summary_report",
+      label: "SUMMARY REPORT",
+    },
+    {
+      key: "Actions",
+      label: "ACTIONS",
+    }
   ];

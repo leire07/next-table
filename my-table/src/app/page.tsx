@@ -9,12 +9,18 @@ export default function Home() {
     color: 'violet',
     fontSize: '2rem',  // Tamaño grande
     marginTop: '20px',  // Margen en la parte superior
-    backgroundColor: 'black',
   };
+
+  const styleBox = {
+    margin: "1rem",
+  }
 
   return (  
     <main className="py-24">
-      <div>
+      <div style={styleBox}>
+        Otro contenido
+      </div>
+      <div style={styleBox}>
         <div style={styleTittle}>
         <h1>VCF Files Uploaded</h1>
         </div>
