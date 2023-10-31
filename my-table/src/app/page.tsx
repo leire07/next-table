@@ -1,5 +1,5 @@
 'use client'
-import MyTable from './mytable'
+import MyTable from './table/mytable'
 // 1. import `NextUIProvider` component
 import {Button} from '@nextui-org/button'
 

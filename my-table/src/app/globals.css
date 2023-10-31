@@ -47,6 +47,19 @@ body {
   height: 2rem;
 }
 
+.my-button-all{
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1px 1px;
+  margin: 4px;
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+}
+
+
 .my-button:hover {
   background-color: #ff8c00;
 }

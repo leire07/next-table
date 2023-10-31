@@ -5,7 +5,7 @@ export const data = [
     {
       key:1,
       name: "sample_0.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2022-05-01",
       last_update_date: null,
       is_regenerating: false,
       requires_user_validation: true,
@@ -13,7 +13,7 @@ export const data = [
     {
       key:2,
       name: "sample_1.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2023-01-05",
       last_update_date: "17/06/2023",
       is_regenerating: false,
       requires_user_validation: false,
@@ -21,7 +21,7 @@ export const data = [
     {
       key:3,
       name: "irene.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2023-01-01",
       last_update_date: null,
       is_regenerating: true,
       requires_user_validation: false,
@@ -29,7 +29,7 @@ export const data = [
     {
       key:4,
       name: "manolo.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2023-01-01",
       last_update_date: null,
       is_regenerating: false,
       requires_user_validation: false,
@@ -37,7 +37,7 @@ export const data = [
     {
       key:5,
       name: "oscar.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2023-01-01",
       last_update_date: null,
       is_regenerating: false,
       requires_user_validation: false,
@@ -45,15 +45,15 @@ export const data = [
     {
       key:6,
       name: "mireia.vcf",
-      creation_date: "01/01/2023",
-      last_update_date: "17/06/2023",
+      creation_date: "2023-01-01",
+      last_update_date: "17/06/2003",
       is_regenerating: false,
       requires_user_validation: false,
     },
     {
       key:7,
       name: "alberto.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2022-01-01",
       last_update_date: null,
       is_regenerating: true,
       requires_user_validation: false,
@@ -61,7 +61,7 @@ export const data = [
     {
       key:8,
       name: "leire.vcf",
-      creation_date: "01/01/2023",
+      creation_date: "2021-01-01",
       last_update_date: "24/10/2023",
       is_regenerating: false,
       requires_user_validation: true,
@@ -93,4 +93,10 @@ export const data = [
       key: "Actions",
       label: "ACTIONS",
     }
+  ];
+
+  export const columns_select = [
+    { label: "Upload Date", value: "upload_date"},
+    { label: "Last Reported", value: "last_reported"},
+    { label: "None", value: "none"},
   ];

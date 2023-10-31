@@ -11,7 +11,7 @@
   "dependencies": {
     "@nextui-org/chip": "^2.0.21",
     "@nextui-org/react": "^2.1.13",
-    "@nextui-org/select": "^2.1.11",
+    "@nextui-org/select": "^2.1.10",
     "@nextui-org/table": "^2.0.23",
     "@nextui-org/tooltip": "^2.0.24",
     "@react-icons/all-files": "^4.1.0",

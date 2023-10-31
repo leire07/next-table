@@ -23,3 +23,8 @@ export function handleDelete(row:any) {
     // Handle view detailed report button click
     console.log("Entra en handleDelete")
 }
+
+export function handleAssembly(row:any) {
+  // Handle view detailed report button click
+  console.log("Entra en handleAssembly")
+}
