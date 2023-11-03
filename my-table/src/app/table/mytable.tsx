@@ -20,7 +20,7 @@ import {
   SortDescriptor,
   SelectItem,
   getKeyValue,
-  select
+  select,
 } from "@nextui-org/react";import {Button} from "@nextui-org/button";
 import {data, columns, columns_select} from "./data"
 import {Tooltip} from "@nextui-org/tooltip";
@@ -29,10 +29,12 @@ import {PiArrowDownFill} from "react-icons/pi";
 import {LuRefreshCw} from "react-icons/lu";
 import {HiTrash} from "react-icons/hi";
 import {BsSearch} from "react-icons/bs";
-import {capitalize, handleAssembly, handleDetailedReport, handleDownloadDetailedReport, handleRegenerate, handleDelete} from "../utils";
-import { color } from "framer-motion";
-import { Icon } from "next/dist/lib/metadata/types/metadata-types";
-import { on } from "events";
+import {AiOutlineCalendar} from "react-icons/ai";
+import {RxCross2} from "react-icons/rx";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { wrap } from "module";
+import {MyHandler} from "./handleButtonsTable";
 
 const INITIAL_VISIBLE_COLUMNS = ["FILE NAME", "UPLOAD DATE", "LAST REPORT DATE", "DETAILED REPORT", "SUMMARY REPORT", "ACTIONS"];
 
@@ -50,6 +52,8 @@ export default function App() {
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
   const [selectValue, setValue] =  React.useState<Selection>(new Set([]));
+  const [dateStart, setDateStart] = React.useState<Date | null>(null);
+  const [dateEnd, setDateEnd] = React.useState<Date | null>(null);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
@@ -84,17 +88,16 @@ export default function App() {
     setPage(1);
   }, []);
 
-
   /* Ordenar y filtrar columnas */
   const sortedItems = React.useMemo(() => {    
     let state = 0
     let sortedData = [...items];
     let uploaded_data = [...items];
+    
     let last_report_data = data.filter((item) => item.last_update_date !== null);
 
     if (Array.from(selectValue).toString() == "upload_date") {
       state = 1;
-      console.log(sortedData);
       uploaded_data = data.sort((a, b) => {
         const dateA = new Date(a.creation_date);
         const dateB = new Date(b.creation_date);
@@ -114,7 +117,22 @@ export default function App() {
     }else if (Array.from(selectValue).toString() == "last_reported") {
       state = 0;
       console.log(sortedData);
-      /* Como hay campos que son nulos aún está por definir que hará */
+      last_report_data = data.sort((a, b) => {
+        const dateA = new Date(a.creation_date);
+        const dateB = new Date(b.creation_date);
+      
+        if (dateA < dateB) {
+          return -1;
+        } else if (dateA > dateB) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+      );
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      last_report_data = last_report_data.slice(start, end);
     } else {
       state = 0;
       console.log("entra en else");
@@ -127,6 +145,7 @@ export default function App() {
       });
     }
 
+    /* Dependiedno del filtro devolverá unos datos u otros */
     if (state ==1 ){
       return uploaded_data
     }else if (state == 2){
@@ -159,7 +178,10 @@ export default function App() {
   const topContent = React.useMemo(() => {
     return(
     <div className="flex flex-col gap-4">
-            <div className="flex gap-4 h-full">
+            <div className="flex gap-4 h-full"
+            style={{
+              display: "flex",
+            }}>
               <div className="w-1/4 h-full caja-filter">
                 <Input
                   isClearable
@@ -172,8 +194,8 @@ export default function App() {
               </div>
               <div className="w-2/4 h-full">
             <Select
-              label="Favorite Animal"
-              placeholder="Select an animal"
+              label="Ordenar por:"
+              placeholder="Selecciona una opción"
               className="max-w-xs caja-select"
               selectedKeys={Array.from(selectValue)}
               onSelectionChange={setValue}
@@ -184,13 +206,52 @@ export default function App() {
                 </SelectItem>
               ))}
             </Select>
-          </div>
-          <div style={
+            </div>
             {
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "end",
-              alignItems: "center"
+            /* //Filtrar por fechas comentado por ahora
+            <div className="data-picker-container">
+              <AiOutlineCalendar size="1.5rem"></AiOutlineCalendar>
+            <DatePicker
+            dateFormat="dd/MM/yyyy"
+            className="data-picker"
+              selected={dateStart}
+              selectsStart
+              startDate={dateStart}
+              endDate={dateEnd} // add the endDate to your startDate DatePicker now that it is defined
+              onChange={date => setDateStart(date || new Date())}
+            />
+            </div>
+            <div className="data-picker-container">
+            <AiOutlineCalendar size="1.5rem"></AiOutlineCalendar>
+            <DatePicker
+            dateFormat="dd/MM/yyyy"
+            className="data-picker"
+              selected={dateEnd}
+              selectsEnd
+              startDate={dateStart}
+              endDate={dateEnd}
+              minDate={dateStart}
+              onChange={date => setDateEnd(date || new Date())}
+            />
+            </div>
+            
+            <div>
+          <Button
+          className="my-button-date" onClick={() => handleSearch()}
+          isIconOnly>
+          <BsSearch size="1.5rem"/>
+          </Button>
+          <Button 
+          className="my-button-date" onClick={() => handleSearch()}
+          isIconOnly>
+          <RxCross2 size="1.5rem"/>
+          </Button>
+          </div>
+          */
+        }
+            <div style={
+            {
+              marginLeft: "auto",
             }
           }>
           <Button isDisabled={selectedKeys.size === 0}
@@ -203,11 +264,11 @@ export default function App() {
           isIconOnly>
           <HiTrash size="1.5rem"/>
           </Button>
+          </div> 
           </div>
             </div>
-          </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, selectValue, onSearchChange, filterValue, onClear]);
+  }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, selectValue, onSearchChange, filterValue, onClear, dateStart, dateEnd]);
 
   /* Contenido de debajo de la tabla */
   const bottomContent = React.useMemo(() => {
@@ -246,7 +307,7 @@ export default function App() {
           isIconOnly
           isDisabled={requiresUserValidation ? true : false}
           className="my-button"
-          onClick={() => handleDetailedReport(item.key) }>
+          onClick={() => MyHandler(item.key, 1) }>
         <AiOutlineEye size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -254,7 +315,7 @@ export default function App() {
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => handleDownloadDetailedReport(item.key)}>
+        className="my-button" onClick={() => MyHandler(item.key, 2)}>
         <PiArrowDownFill size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -268,7 +329,7 @@ export default function App() {
           isIconOnly
           isDisabled={requiresUserValidation ? true : false}
           className="my-button"
-          onClick={() => handleDetailedReport(item.key)}>
+          onClick={() => MyHandler(item.key, 1)}>
         <AiOutlineEye size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -276,7 +337,7 @@ export default function App() {
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => handleDownloadDetailedReport(item.key)}>
+        className="my-button" onClick={() => MyHandler(item.key, 2)}>
         <PiArrowDownFill size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -290,7 +351,7 @@ export default function App() {
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => handleRegenerate(item.key)}>
+        className="my-button" onClick={() => MyHandler(item.key, 3)}>
         <LuRefreshCw size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -298,7 +359,7 @@ export default function App() {
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => handleDelete(item.key)}>
+        className="my-button" onClick={() => MyHandler(item.key, 4)}>
         <HiTrash size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -309,7 +370,7 @@ export default function App() {
               <div className="">
           <Tooltip content="Validar" style={{ color: 'orange'}}>
           <Button 
-          className="my-button" onClick={() => handleAssembly(item.key)}>
+          className="my-button" onClick={() => MyHandler(item.key, 5)}>
             Assembly
           </Button>
           </Tooltip>
@@ -326,7 +387,7 @@ export default function App() {
 
   /* Contenido de la tabla y aspecto */
   return (
-    <div className="my-table-container">
+    <div>
     <Table 
       aria-label="Example table with custom cells, pagination and sorting"
       isHeaderSticky

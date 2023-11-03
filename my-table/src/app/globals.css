@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('inter-ui/Inter.css');
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -24,6 +26,35 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+.home{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-bottom: 3rem;
+  background-color: white;
+}
+
+.header-table{
+  background-color: #F4DAFDED;
+  height: 10rem;
+  margin-bottom: 3rem;
+}
+
+.tittle-report{
+  font-family: 'Inter';
+  color: #F98317;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.tittle-table{
+  font-family: 'Inter';
+  color: #BD6ED9;
+  font-size: 30px;
 }
 
 .my-table {
@@ -59,6 +90,26 @@ body {
   height: 3rem;
 }
 
+.div-button-all{
+  display: "flex";
+  flex-direction: "row";
+  justify-content: "flex-end";
+  align-items: "center";
+}
+
+.my-button-date{
+  background-color: #272727;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1px 1px;
+  margin: 4px;
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+}
+
+
 
 .my-button:hover {
   background-color: #ff8c00;
@@ -87,4 +138,57 @@ body {
 }
 .item-select{
   color: white;
+}
+
+/*
+.data-picker-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #272727;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 10px;
+}
+
+.data-picker{
+  color: white;
+  background-color: #272727;
+  margin-left: 0.5rem;
+}
+*/
+
+
+.dragndrop{
+  display: flex;
+  flex-direction: row; /* Cambia esto */
+  justify-content:space-around;
+  border: 2px solid #D9D9D9;
+  border-radius: 1rem;
+  align-items: center;
+  text-align: center;
+  height: 6rem;
+
+}
+
+.dragndrop-text{
+  color: #000000;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 0.6rem;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.upload-text{
+  font-family: 'Inter';
+  font-size: 18px;
+}
+
+.boton-rosa:disabled{
+  background-color: #cf4cff;
+  color: white;
+  font-family: 'Inter';
 }

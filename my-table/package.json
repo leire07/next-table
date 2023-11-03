@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/x-date-pickers": "^6.17.0",
     "@nextui-org/chip": "^2.0.21",
     "@nextui-org/react": "^2.1.13",
     "@nextui-org/select": "^2.1.10",
@@ -16,15 +19,22 @@
     "@nextui-org/tooltip": "^2.0.24",
     "@react-icons/all-files": "^4.1.0",
     "framer-motion": "^10.16.4",
+    "inter-ui": "^3.19.3",
     "next": "13.5.6",
+    "nextjs-tui-date-picker": "^2.1.0",
     "react": "^18",
+    "react-date-picker": "^10.5.2",
+    "react-datepicker": "^4.21.0",
     "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
     "react-icons": "^4.11.0",
-    "swr": "^2.2.4"
+    "swr": "^2.2.4",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-datepicker": "^4.19.1",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
     "eslint": "^8",
