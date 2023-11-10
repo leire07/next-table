@@ -1,4 +1,5 @@
-import React, { Key, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import "./mytable.css"; 
 import {
   Table,
   Select,
@@ -8,19 +9,11 @@ import {
   TableRow,
   TableCell,
   Input,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Chip,
   User,
   Pagination,
   Selection,
-  ChipProps,
   SortDescriptor,
   SelectItem,
-  getKeyValue,
-  select,
 } from "@nextui-org/react";import {Button} from "@nextui-org/button";
 import {data, columns, columns_select} from "./data"
 import {Tooltip} from "@nextui-org/tooltip";
@@ -28,13 +21,13 @@ import {AiOutlineEye} from "react-icons/ai";
 import {PiArrowDownFill} from "react-icons/pi";
 import {LuRefreshCw} from "react-icons/lu";
 import {HiTrash} from "react-icons/hi";
-import {BsSearch} from "react-icons/bs";
-import {AiOutlineCalendar} from "react-icons/ai";
-import {RxCross2} from "react-icons/rx";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { wrap } from "module";
-import {MyHandler} from "./handleButtonsTable";
+import {BiMenuAltLeft} from "react-icons/bi";
+/*import "react-datepicker/dist/react-datepicker.css";*/
+import {filterDate} from "../utils";
+import { Document, PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
+import { CrearPDF } from './renderPdf';
+import {HandleZip} from "./createPdf";
+
 
 const INITIAL_VISIBLE_COLUMNS = ["FILE NAME", "UPLOAD DATE", "LAST REPORT DATE", "DETAILED REPORT", "SUMMARY REPORT", "ACTIONS"];
 
@@ -43,21 +36,34 @@ type User = typeof data[0];
 
 export default function App() {
 
-  /** Pagination */
 
   const [page, setPage] = React.useState(1);
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
   const [selectValue, setValue] =  React.useState<Selection>(new Set([]));
   const [dateStart, setDateStart] = React.useState<Date | null>(null);
   const [dateEnd, setDateEnd] = React.useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [identificador, setId] = useState<number | null>(null);
+  const arrayIdentificadoresRef = React.useRef<number[]>([]);
+  const [optionButton, setOptionButton] = useState<number | null>(null);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
+
+  useEffect(() => {
+    let arrayKeys: string[] = Array.from(selectedKeys).map(key => key.toString());
+    if (arrayKeys[0] === 'a') {
+      arrayIdentificadoresRef.current = Array.from({length: data.length}, (_, i) => i + 1);
+    } else {
+      arrayIdentificadoresRef.current = arrayKeys.map(Number);
+    }
+    console.log(arrayIdentificadoresRef.current); // Debería mostrar el valor actualizado
+  }, [selectedKeys, data.length]);
+  
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -114,12 +120,13 @@ export default function App() {
       const start = (page - 1) * rowsPerPage;
       const end = start + rowsPerPage;
       uploaded_data = uploaded_data.slice(start, end);
+
     }else if (Array.from(selectValue).toString() == "last_reported") {
-      state = 0;
-      console.log(sortedData);
+      state = 2;
       last_report_data = data.sort((a, b) => {
-        const dateA = new Date(a.creation_date);
-        const dateB = new Date(b.creation_date);
+        const dateA = new Date(filterDate(a.last_update_date));
+        const dateB = new Date(filterDate(b.last_update_date));
+        console.log(dateA, dateB);
       
         if (dateA < dateB) {
           return -1;
@@ -133,9 +140,9 @@ export default function App() {
       const start = (page - 1) * rowsPerPage;
       const end = start + rowsPerPage;
       last_report_data = last_report_data.slice(start, end);
-    } else {
+
+    } else if (Array.from(selectValue).toString() == "none") {
       state = 0;
-      console.log("entra en else");
       sortedData = sortedData.sort((a: User, b: User) => {
         const first = a[sortDescriptor.column as keyof User] as number;
         const second = b[sortDescriptor.column as keyof User] as number;
@@ -143,18 +150,20 @@ export default function App() {
   
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
+      
     }
-
     /* Dependiedno del filtro devolverá unos datos u otros */
     if (state ==1 ){
-      return uploaded_data
+      return uploaded_data;
     }else if (state == 2){
       return last_report_data;
     }else if (state == 0){
       return sortedData;
     }
+    
 
   }, [sortDescriptor, items, selectValue,items, items.length, page, pages, hasSearchFilter, filteredItems.length]);
+
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
@@ -177,16 +186,18 @@ export default function App() {
   /* Contenido de arriba de la tabla */
   const topContent = React.useMemo(() => {
     return(
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" id="fondo-blanco">
             <div className="flex gap-4 h-full"
             style={{
               display: "flex",
+              backgroundColor: "white",
             }}>
-              <div className="w-1/4 h-full caja-filter">
+              <div className="w-1/4 h-full caja-filter" id="input-filter">
                 <Input
+                  label="Filter"
                   isClearable
                   placeholder="Search by name..."
-                  startContent={<BsSearch />}
+                  /* startContent={<BsSearch />} */
                   value={filterValue}
                   onClear={() => onClear()}
                   onValueChange={onSearchChange}
@@ -194,11 +205,13 @@ export default function App() {
               </div>
               <div className="w-2/4 h-full">
             <Select
-              label="Ordenar por:"
+              style={{backgroundColor:"transparent"}}
+              /* label="Ordenar por:" */
               placeholder="Selecciona una opción"
+              startContent={<BiMenuAltLeft color="#F17F16"/>}
               className="max-w-xs caja-select"
               selectedKeys={Array.from(selectValue)}
-              onSelectionChange={setValue}
+              onSelectionChange={(keys) => setValue(new Set(keys))}
             >
               {columns_select.map((cd) => (
                 <SelectItem key={cd.value} value={cd.value} className="item-select">
@@ -255,12 +268,12 @@ export default function App() {
             }
           }>
           <Button isDisabled={selectedKeys.size === 0}
-          className="my-button-all" onClick={() => console.log("Descargar todo")}
+          className="my-button-all" onClick={() => {HandleZip(arrayIdentificadoresRef.current)}}
           isIconOnly>
           <PiArrowDownFill size="1.5rem"/>
           </Button>
           <Button isDisabled={selectedKeys.size === 0}
-          className="my-button-all" onClick={() => console.log("Descargar todo")}
+          className="my-button-all" onClick={() => {setValue;}}
           isIconOnly>
           <HiTrash size="1.5rem"/>
           </Button>
@@ -282,12 +295,10 @@ export default function App() {
          <Pagination
               isCompact
               showControls
-              showShadow
-              color="warning"
+              color="primary"
               page={page}
               total={pages}
               onChange={(page) => setPage(page)}
-              className="pagination-button"
             />
       </div>
     );
@@ -307,18 +318,20 @@ export default function App() {
           isIconOnly
           isDisabled={requiresUserValidation ? true : false}
           className="my-button"
-          onClick={() => MyHandler(item.key, 1) }>
+          onClick={() => {setIsModalOpen(true); setId(item.key); setOptionButton(1)}}>
         <AiOutlineEye size="1.5rem"/>
         </Button>
         </Tooltip>
+        <PDFDownloadLink document={<CrearPDF id={item.key} option={1} />} fileName="documento.pdf">
         <Tooltip content="Descargar" style={{ color: 'orange'}} isDisabled={requiresUserValidation ? true : false}>
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => MyHandler(item.key, 2)}>
+        className="my-button">
         <PiArrowDownFill size="1.5rem"/>
         </Button>
         </Tooltip>
+        </PDFDownloadLink>
         </div>
         );
         case "Summary_report":
@@ -329,18 +342,20 @@ export default function App() {
           isIconOnly
           isDisabled={requiresUserValidation ? true : false}
           className="my-button"
-          onClick={() => MyHandler(item.key, 1)}>
+          onClick={() => {setIsModalOpen(true); setId(item.key); setOptionButton(2)}}>
         <AiOutlineEye size="1.5rem"/>
         </Button>
         </Tooltip>
+        <PDFDownloadLink document={<CrearPDF id={item.key} option={2} />} fileName="documento.pdf">
         <Tooltip content="Descargar" style={{ color: 'orange'}} isDisabled={requiresUserValidation ? true : false}>
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => MyHandler(item.key, 2)}>
+        className="my-button" onClick={() => console.log("xd")}>
         <PiArrowDownFill size="1.5rem"/>
         </Button>
         </Tooltip>
+        </PDFDownloadLink>
         </div>
           );
         case "Actions":
@@ -350,8 +365,9 @@ export default function App() {
         <Tooltip content="Regenerar" style={{ color: 'orange'}}>
         <Button 
         isIconOnly
+        className="my-button"
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => MyHandler(item.key, 3)}>
+        onClick={() => console.log("Boton regenerar")}>
         <LuRefreshCw size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -359,7 +375,8 @@ export default function App() {
         <Button 
         isIconOnly
         isDisabled={requiresUserValidation ? true : false} 
-        className="my-button" onClick={() => MyHandler(item.key, 4)}>
+        className="my-button" 
+        onClick={() => (console.log("Boton borrar"))}>
         <HiTrash size="1.5rem"/>
         </Button>
         </Tooltip>
@@ -367,10 +384,10 @@ export default function App() {
           );
           }else{
             return(
-              <div className="">
-          <Tooltip content="Validar" style={{ color: 'orange'}}>
+              <div>
+          <Tooltip content="Validar" style={{color: 'orange'}}>
           <Button 
-          className="my-button" onClick={() => MyHandler(item.key, 5)}>
+          className="my-button" onClick={() => (console.log("validar"))}>
             Assembly
           </Button>
           </Tooltip>
@@ -388,10 +405,14 @@ export default function App() {
   /* Contenido de la tabla y aspecto */
   return (
     <div>
-    <Table 
+    <Table
+      style={{
+        backgroundColor: "white",
+        borderRadius: "10px",
+        textAlign: "center"
+      }}
       aria-label="Example table with custom cells, pagination and sorting"
       isHeaderSticky
-      className="my-table"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={{
@@ -403,18 +424,34 @@ export default function App() {
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
     >
-      <TableHeader  columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      <TableHeader
+      style={{ textAlign: "center" }}
+        columns={columns}>
+        {(column) => <TableColumn
+        key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={sortedItems}>
+      <TableBody
+      items={sortedItems}>
         {(item) => (  // Aquí definimos el tipo de item
-          <TableRow key={item.key}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+          <TableRow   key={item.key}>
+            {(columnKey) => <TableCell
+            >{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}
       </TableBody>
     </Table>
-  
+
+    {isModalOpen && identificador !== null && optionButton !== null && (
+            <div className="modal">
+              <div className="modal-content">
+                <PDFViewer style={{ width: "100%", height: "90vh" }}>
+                  <CrearPDF id={identificador} option={optionButton} />
+                </PDFViewer>
+                <Button onClick={() => setIsModalOpen(false)}>Cerrar PDF</Button>
+              </div>
+            </div>
+          )}
+
   </div>
   );
 }

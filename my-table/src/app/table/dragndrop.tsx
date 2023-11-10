@@ -18,10 +18,7 @@ const DragnDrop:FunctionComponent<{setFile:Dispatch<any>}> = ({setFile}) => {
     onDrop,
     multiple: false,
     accept: {
-    'image/png': ['.png'],
-    'image/jpg': ['.jpg'],
-    'image/jpeg': ['.jpeg'],
-    'application/pdf': ['.pdf'],},
+    'file/vcf': ['.vcf'],},
 });
 
   return (
