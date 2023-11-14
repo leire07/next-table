@@ -1,26 +1,28 @@
 import React, {  Dispatch, FunctionComponent, useCallback} from "react";
 import {Button} from "@nextui-org/react";
 import { useDropzone } from "react-dropzone";
-import Image from 'next/image'
-import folderImage from './images/purple_folder.png';
 import {FaFileArrowUp} from 'react-icons//fa6';
 import {IoAddCircleSharp} from 'react-icons/io5';
 
-const DragnDrop:FunctionComponent<{setFile:Dispatch<any>}> = ({setFile}) => {
+/* The code defines a functional component called `DragnDrop` that takes a prop `setFiles` of type
+`Dispatch<any>`. */
+const DragnDrop:FunctionComponent<{setFiles:Dispatch<any>}> = ({setFiles}) => {
 
     const onDrop = useCallback(
-        (acceptedFiles) => {
-        setFile(acceptedFiles[0]);
-        },[]);
+    (acceptedFiles) => {
+    setFiles(prevFiles => [...prevFiles, ...acceptedFiles]);
+    },[setFiles]);
 
 
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: true,
     accept: {
     'file/vcf': ['.vcf'],},
 });
 
+  /* The `return` statement in the code is returning the JSX (JavaScript XML) code that represents the
+  structure and content of the component's UI. */
   return (
       <div {...getRootProps()} className="w-full h-80 dragndrop-container cursor-pointer focus:outline-none">
         <input {...getInputProps()} />

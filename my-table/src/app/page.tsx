@@ -1,25 +1,20 @@
 'use client'
 import MyTable from './table/mytable'
-import DragnDrop from './table/dragndrop'
+import DragnDrop from './drag_and_drop/dragndrop'
 // 1. import `NextUIProvider` component
-import {Button} from '@nextui-org/button'
-import React, { useState, useReducer } from "react";
-import RenderFile from './table/RenderFile';
-import { Document, PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
-import { CrearPDF } from './table/renderPdf';
-
-
+import { Button } from '@nextui-org/button'
+import React, { useState } from "react";
+import RenderFile from './drag_and_drop/RenderFile';
 
 export default function Home() {
-  const [file, setFile] = useState<File | null>(null);
-
-
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleUpload = () => {
     const formData = new FormData();
-    if (file !== null){
-      const formData = new FormData();
-      formData.append('myFile', file);
+    if (files.length > 0) {
+      files.forEach((file, index) => {
+        formData.append('myFile' + index, file);
+      });
       /* 
       No sé donde se sube el archivo, pero se sube con el nombre myFile
       Video de referencia que he usado: https://www.youtube.com/watch?v=qEM6-C_n068&list=PLQKg8mIgoxKpabc2THMtnSJNBLIezc4C2&index=8
@@ -28,15 +23,15 @@ export default function Home() {
   }
 
   const handleClear = () => {
-    if (file !== null) {
-      setFile(null)
+    if (files !== null) {
+      setFiles([]);
+    }
   }
-}
 
   const styleTittle = {
     color: 'violet',
-    fontSize: '2rem',  // Tamaño grande
-    marginTop: '20px',  // Margen en la parte superior
+    fontSize: '2rem',
+    marginTop: '20px',
   };
 
   const styleBox = {
@@ -44,10 +39,12 @@ export default function Home() {
     paddingLeft: '9rem',
     paddingRight: '9rem',
   }
-  return (  
+
+  
+  return (
     <main className="py-24 home">
       <header className="flex flex-col items-center justify-center min-h-screen py-2 header-table">
-      <h1 className='tittle-report'>VarReport</h1>
+        <h1 className='tittle-report'>VarReport</h1>
       </header>
       <div style={
         {
@@ -60,24 +57,24 @@ export default function Home() {
           paddingBottom: '3rem',
         }
       }>
-        <DragnDrop setFile={setFile}/>
-        {file && <RenderFile file={file} name={file.name}/>}
+        <DragnDrop setFiles={setFiles} />
+        {files.map((file, index) => <RenderFile key={index} file={file} name={file.name} />)}
 
-        <div/>
-        {file && (
-        <div className='flex justify-center items-center w-full p-4 my-2'>
-          <Button style={{marginRight: '1rem'}} className='mx-2' onClick={handleUpload}>Upload</Button>
-          <Button className='mx-2' onClick={handleClear}>Clear</Button>
-        </div>
-      )}
+        <div />
+        {files.length != 0 && (
+          <div className='flex justify-center items-center w-full p-4 my-2'>
+            <Button style={{ marginRight: '1rem' }} className='mx-2' onClick={handleUpload}>Upload</Button>
+            <Button className='mx-2' onClick={handleClear}>Clear</Button>
+          </div>
+        )}
       </div>
       <div style={styleBox}>
         <div style={styleTittle}>
-        <h1 className='tittle-table'>VCF Files Uploaded</h1>
+          <h1 className='tittle-table'>VCF Files Uploaded</h1>
         </div>
-        <MyTable/>
+        <MyTable />
       </div>
     </main>
 
   )
-  }
+}

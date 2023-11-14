@@ -1,10 +1,8 @@
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, pdf } from '@react-pdf/renderer';
-import {data} from "./data"
+import {data} from "../table/data"
 import JSZip from 'jszip';
-import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import { CrearPDF } from './renderPdf';
 
 const style_pdf = StyleSheet.create({
   page: {
@@ -29,15 +27,25 @@ const style_pdf = StyleSheet.create({
   },
 });
 
-
-
+// Obtiene el nombre del archivo sin la extensión
+/**
+ * The function `getFileNameWithoutExtension` takes a filename as input and returns the filename
+ * without its extension.
+ * @param {string} filename - The `filename` parameter is a string that represents the name of a file,
+ * including its extension.
+ * @returns The function `getFileNameWithoutExtension` returns the filename without the extension.
+ */
 const getFileNameWithoutExtension = (filename: string) => {
   return filename.split('.')[0];
 };
 
-
 // Crea el documento
-const getPdf = async (listaPdfs: number[]) => {
+/**
+ * The function `getPdf` takes an array of PDF IDs, filters the data based on those IDs, and generates
+ * PDF documents for each filtered data item.
+ * @param {number[]} listaPdfs - An array of numbers representing the IDs of the PDFs to be processed.
+ */
+async function getPdf(listaPdfs: number[]) {
   console.log(listaPdfs)
   const pdfs = [];
   const names = [];
@@ -47,10 +55,11 @@ const getPdf = async (listaPdfs: number[]) => {
   const filteredData = data.filter(item => item.key === id);
   console.log(`Processing file ${i + 1}: ${filteredData.map((item) => item.name)}`);
   // Si requiresUserValidation es false, pasa al siguiente id
-  if (filteredData[0].requires_user_validation) {
+  if (filteredData[0].requires_user_validation || filteredData[0].is_regenerating) {
     continue;
   }
   const MyDocument = () =>{
+    console.log("entra en my document")
     return pdf(
     <Document>
       <Page size="A4" style={style_pdf.page}>
@@ -97,45 +106,37 @@ const getPdf = async (listaPdfs: number[]) => {
   return {pdfs, names};
 }
 
-interface CrearPDFProps {
-  pdfs: Array<Blob>;
-  names: Array<string>;
+/**
+ * The function creates and downloads a zip file containing multiple PDFs with corresponding names.
+ * @param {Blob[]} pdfs - An array of Blob objects representing the PDF files to be included in the zip
+ * file.
+ * @param {string[]} names - An array of strings representing the names of the PDF files. Each name
+ * corresponds to a PDF in the `pdfs` array.
+ */
+async function createAndDownloadZip(pdfs: Blob[], names: string[]) {
+  const zip = new JSZip();
+
+  pdfs.forEach((pdf, index) => {
+    zip.file(`${names[index]}.pdf`, pdf);
+  });
+
+  const content = await zip.generateAsync({ type: 'blob' });
+  const currentDate = new Date().toLocaleDateString('es-ES');
+
+  saveAs(content, `${currentDate}.zip`);
 }
 
-const ListPdf = async({ pdfs, names}: CrearPDFProps) => {
-
-  const handleDownloadZip = async () => {
-
-    const zip = new JSZip();
-
-    pdfs.forEach((pdf: Blob, index) => {
-      zip.file(`${names[index]}.pdf`, pdf);
-    });
-
-    const content = await zip.generateAsync({ type: 'blob' });
-
-    const currentDate = new Date().toLocaleDateString('es-ES');
-
-    saveAs(content, currentDate + '.zip');
-  }
-
-  return(handleDownloadZip);
-
-}
-
+/**
+ * The HandleZip function takes in a list of IDs, retrieves corresponding PDFs and names, and creates
+ * and downloads a zip file containing the PDFs if all PDFs were successfully generated.
+ * @param {number[]} listaIds - An array of numbers representing the IDs of the PDFs to be generated
+ * and included in the zip file.
+ */
 export const HandleZip = async (listaIds: number[]) => {
-  // Convertir los identificadores en PDFs
-  const {pdfs, names} = await getPdf(listaIds);
+  const { pdfs, names } = await getPdf(listaIds);
 
-  // Esperar a que todos los PDFs se hayan generado
-  const allPdfsGenerated = pdfs.every(pdf => pdf !== null && pdf !== undefined);
-
-  if (allPdfsGenerated) {
-    // Pasar los PDFs a ListPdf
-    const handleDownloadZip = await ListPdf({ pdfs, names });
-
-    // Descargar el ZIP
-    await handleDownloadZip();
+  if (pdfs.every(pdf => pdf !== null && pdf !== undefined)) {
+    await createAndDownloadZip(pdfs, names);
   } else {
     console.error('Not all PDFs were generated');
   }

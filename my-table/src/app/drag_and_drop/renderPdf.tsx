@@ -1,6 +1,6 @@
 import React from "react";
 import { Document, Page, View, Text, StyleSheet} from '@react-pdf/renderer';
-import {data, columns, columns_select} from "./data"
+import {data, columns, columns_select} from "../table/data"
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -38,7 +38,7 @@ const getFileNameWithoutExtension = (filename: string) => {
 };
 
 /* URL con toda la informcaión de los componentes: https://react-pdf.org/components#view */
-
+/* El caso 1 será el pdf para el detailed report y el caso 2 para el summary report */ 
 export const CrearPDF = ({ id, option }: CrearPDFProps) => {
   const filteredData = data.filter(item => item.key === id);
   console.log("El documento es:" + Document)

@@ -103,6 +103,10 @@
     color: var(--color-botones) !important;
   }
 
+  [id='react-aria8000353855-:r3:'] {
+    color: var(--color-botones) !important;
+  }
+
   .caja-select{
     width: 15rem;
     background-color: transparent !important;
@@ -117,6 +121,11 @@
     border: 1px solid #E4E4E7;
     color: #71717A;
   }
+
+  #input-filter > div:first-child > div:first-child > label {
+    color: var(--color-botones) !important; /* Cambia 'red' a tu color deseado */
+  }
+
   
   
   .item-select{

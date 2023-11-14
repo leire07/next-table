@@ -2,6 +2,7 @@ import { FunctionComponent, useState } from "react";
 import Image from 'next/image'
 import {ImProfile} from 'react-icons/im';
 
+/* Muestra el icono con el nombre del archivo al cargarlo en el drag and drop */
 const RenderFile:FunctionComponent<{
     file: File | null,
     name: string | null
