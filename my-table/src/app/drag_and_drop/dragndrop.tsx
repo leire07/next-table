@@ -29,7 +29,7 @@ const DragnDrop:FunctionComponent<{setFiles:Dispatch<any>}> = ({setFiles}) => {
         <div className= {"dragndrop"}>
             <p>Upload VCF file</p>
             {
-                isDragReject ? <p>Lo siento, esta aplicacioón no soporta este archivo.</p>:
+                isDragReject ? <p>Sorry, this application does not support this file.</p>:
                 <div style={
                     {
                         display: 'flex',
@@ -44,7 +44,7 @@ const DragnDrop:FunctionComponent<{setFiles:Dispatch<any>}> = ({setFiles}) => {
                 </div>
             }
             <div>
-                <Button className="boton-rosa" isDisabled startContent={<IoAddCircleSharp size="1.5rem"/>}>
+                <Button className="pink-button" isDisabled startContent={<IoAddCircleSharp size="1.5rem"/>}>
                     Upload
                 </Button>
             </div>

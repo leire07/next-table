@@ -27,7 +27,6 @@ const style_pdf = StyleSheet.create({
   },
 });
 
-// Obtiene el nombre del archivo sin la extensión
 /**
  * The function `getFileNameWithoutExtension` takes a filename as input and returns the filename
  * without its extension.
@@ -39,22 +38,21 @@ const getFileNameWithoutExtension = (filename: string) => {
   return filename.split('.')[0];
 };
 
-// Crea el documento
 /**
  * The function `getPdf` takes an array of PDF IDs, filters the data based on those IDs, and generates
  * PDF documents for each filtered data item.
- * @param {number[]} listaPdfs - An array of numbers representing the IDs of the PDFs to be processed.
+ * @param {number[]} listPdfs - An array of numbers representing the IDs of the PDFs to be processed.
  */
-async function getPdf(listaPdfs: number[]) {
-  console.log(listaPdfs)
+async function getPdf(listPdfs: number[]) {
+  console.log(listPdfs)
   const pdfs = [];
   const names = [];
-  for(let i = 0; i < listaPdfs.length ; i++) {
-  const id = listaPdfs[i];
+  for(let i = 0; i < listPdfs.length ; i++) {
+  const id = listPdfs[i];
   console.log("el contenido es " + id)
   const filteredData = data.filter(item => item.key === id);
   console.log(`Processing file ${i + 1}: ${filteredData.map((item) => item.name)}`);
-  // Si requiresUserValidation es false, pasa al siguiente id
+  // If requiresUserValidation is false, take the next file
   if (filteredData[0].requires_user_validation || filteredData[0].is_regenerating) {
     continue;
   }
@@ -66,10 +64,10 @@ async function getPdf(listaPdfs: number[]) {
         {/* Mapeo de datos fuera del bloque View */}
         {filteredData.map((item) => (
           <View key={item.key} style={style_pdf.section}>
-            <Text>Paciente: {getFileNameWithoutExtension(item.name)}</Text>
+            <Text>Patient: {getFileNameWithoutExtension(item.name)}</Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Nombre: {" "}
+              Name: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.name}
@@ -77,7 +75,7 @@ async function getPdf(listaPdfs: number[]) {
             </Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Fecha de creación: {" "}
+              Creation date: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.creation_date}
@@ -85,16 +83,14 @@ async function getPdf(listaPdfs: number[]) {
             </Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Fecha de actualización: {" "}
+              Update date: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.last_update_date}
             </Text>
             </Text>
-            {/* Agrega más contenido según sea necesario */}
           </View>
         ))}
-        {/* Fin del mapeo de datos */}
       </Page>
     </Document>
     )

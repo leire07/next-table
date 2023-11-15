@@ -41,7 +41,6 @@ export const TopContent = ({ filterValue, onClear, onSearchChange, setValue, sel
     } else {
       arrayIdentificadores.current = arrayKeys.map(Number);
     }
-    console.log("selectedkeys" +selectedKeys.toString());
   }, [selectedKeys, data.length]);
 
     return(
@@ -51,7 +50,7 @@ export const TopContent = ({ filterValue, onClear, onSearchChange, setValue, sel
                   display: "flex",
                   backgroundColor: "white",
                 }}>
-                  <div className="w-1/4 h-full caja-filter" id="input-filter">
+                  <div className="w-1/4 h-full" id="input-filter">
                     <Input
                       label="Filter"
                       isClearable
@@ -68,7 +67,7 @@ export const TopContent = ({ filterValue, onClear, onSearchChange, setValue, sel
                   /* label="Ordenar por:" */
                   placeholder="Selecciona una opción"
                   startContent={<BiMenuAltLeft color="#F17F16"/>}
-                  className="max-w-xs caja-select"
+                  className="max-w-xs select-box"
                   selectedKeys={Array.from(selectValue)}
                   onSelectionChange={(keys) => setValue(new Set(keys))}
                 >

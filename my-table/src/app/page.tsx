@@ -16,8 +16,8 @@ export default function Home() {
         formData.append('myFile' + index, file);
       });
       /* 
-      No sé donde se sube el archivo, pero se sube con el nombre myFile
-      Video de referencia que he usado: https://www.youtube.com/watch?v=qEM6-C_n068&list=PLQKg8mIgoxKpabc2THMtnSJNBLIezc4C2&index=8
+      I don't know where the file is uploaded, but it will upload with the name "myFile"
+      Video reference: https://www.youtube.com/watch?v=qEM6-C_n068&list=PLQKg8mIgoxKpabc2THMtnSJNBLIezc4C2&index=8
       */
     }
   }
@@ -63,8 +63,8 @@ export default function Home() {
         <div />
         {files.length != 0 && (
           <div className='flex justify-center items-center w-full p-4 my-2'>
-            <Button style={{ marginRight: '1rem' }} className='mx-2' onClick={handleUpload}>Upload</Button>
-            <Button className='mx-2' onClick={handleClear}>Clear</Button>
+            <Button style={{ marginRight: '1rem', backgroundColor:'#E395FF'}} className='mx-2' onClick={handleUpload}>Upload</Button>
+            <Button style={{backgroundColor:'#E395FF'}} className='mx-2' onClick={handleClear}>Clear</Button>
           </div>
         )}
       </div>

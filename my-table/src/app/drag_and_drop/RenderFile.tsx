@@ -1,13 +1,11 @@
-import { FunctionComponent, useState } from "react";
-import Image from 'next/image'
+import { FunctionComponent} from "react";
 import {ImProfile} from 'react-icons/im';
 
-/* Muestra el icono con el nombre del archivo al cargarlo en el drag and drop */
+/* Show the icon with the name of the file when drag and drop is loaded */
 const RenderFile:FunctionComponent<{
     file: File | null,
     name: string | null
 }> = ({file, name}) => {
-    const [imageLoaded, setImageLoaded] = useState(false);
 
     if (!file) {
         return null;

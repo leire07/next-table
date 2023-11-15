@@ -87,15 +87,6 @@
     cursor: not-allowed;
   }
   
-  .alinear-celda{
-    align-items: center;
-    text-align: center;
-  }
-  
-  .caja-filter{
-    width: 20rem;
-  }
-  
   [id='react-aria-:RnemkqH1:'] {
     color: var(--color-botones) !important;
   }
@@ -107,7 +98,7 @@
     color: var(--color-botones) !important;
   }
 
-  .caja-select{
+  .select-box{
     width: 15rem;
     background-color: transparent !important;
     color: #71717A;
@@ -179,7 +170,7 @@
     font-size: 18px;
   }
   
-  .boton-rosa:disabled{
+  .pink-button:disabled{
     background-color: #cf4cff;
     color: white;
     font-family: 'Inter';

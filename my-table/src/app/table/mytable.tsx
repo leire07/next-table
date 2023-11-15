@@ -32,14 +32,14 @@ export default function App() {
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
   const [selectValue, setValue] =  React.useState<Selection>(new Set([]));
-  const [listaPdfs, setListaPdfs] = useState<number[]>([]);
+  const [listPdfs, setlistPdfs] = useState<number[]>([]);
   /*
   const [dateStart, setDateStart] = React.useState<Date | null>(null);
   const [dateEnd, setDateEnd] = React.useState<Date | null>(null);
   */
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [identificador, setId] = useState<number | null>(null);
-  const arrayIdentificadoresRef = React.useRef<number[]>([]);
+  const arrayIdentifiersRef = React.useRef<number[]>([]);
   const [optionButton, setOptionButton] = useState<number | null>(null);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
@@ -51,13 +51,13 @@ export default function App() {
   useEffect(() => {
     let arrayKeys: string[] = Array.from(selectedKeys).map(key => key.toString());
     if (arrayKeys[0] === 'a') {
-      arrayIdentificadoresRef.current = Array.from({length: data.length}, (_, i) => i + 1);
-      setListaPdfs(arrayIdentificadoresRef.current);
+      arrayIdentifiersRef.current = Array.from({length: data.length}, (_, i) => i + 1);
+      setlistPdfs(arrayIdentifiersRef.current);
     } else {
-      arrayIdentificadoresRef.current = arrayKeys.map(Number);
-      setListaPdfs(arrayIdentificadoresRef.current);
+      arrayIdentifiersRef.current = arrayKeys.map(Number);
+      setlistPdfs(arrayIdentifiersRef.current);
     }
-    console.log("array de ids" + arrayIdentificadoresRef.current);
+    console.log("array de ids" + arrayIdentifiersRef.current);
 
   }, [selectedKeys, data.length]);
 
@@ -95,7 +95,7 @@ export default function App() {
   }, [page, filteredItems, rowsPerPage]);
 
 
-  /* Ordenar y filtrar columnas */
+  /* Order and filter columns */
   /* The `sortedItems` constant is using the `useMemo` hook to memoize a sorted subset of the `items`
   array based on the current `sortDescriptor` and `selectValue` values. */
   const sortedItems = React.useMemo(() => {    
@@ -104,9 +104,8 @@ export default function App() {
     let uploaded_data = [...items];
     
     let last_report_data = data.filter((item) => item.last_update_date !== null);
-    //Si el campo seleccionado del item es igual a upload_date, ordena por fecha de subida
+    //If the selected field of the item is equal to upload_date, order by upload date    
     if (Array.from(selectValue).toString() == "upload_date") {
-      //El estado cammbia a 1
       state = 1;
       uploaded_data = data.sort((a, b) => {
         const dateA = new Date(a.creation_date);
@@ -121,12 +120,12 @@ export default function App() {
         }
       }
       );
-      //Actualizamos el estado de la página
+      //We update the status of the page
       const start = (page - 1) * rowsPerPage;
       const end = start + rowsPerPage;
       uploaded_data = uploaded_data.slice(start, end);
 
-    //Si el campo seleccionado del item es igual a last_reported, ordena por fecha de último reporte
+    //If the selected field of the item is equal to last_reported, sort by last report date
     }else if (Array.from(selectValue).toString() == "last_reported") {
       state = 2;
       last_report_data = data.sort((a, b) => {
@@ -147,7 +146,7 @@ export default function App() {
       const end = start + rowsPerPage;
       last_report_data = last_report_data.slice(start, end);
 
-      //Si el campo seleccionado del item es igual a none, coge la ordenación por defecto
+      //If the selected field of the item is equal to none, it takes the default sorting
     } else if (Array.from(selectValue).toString() == "none") {
       state = 0;
       sortedData = sortedData.sort((a: User, b: User) => {
@@ -159,7 +158,7 @@ export default function App() {
       });
       
     }
-    /* Dependiedno del filtro devolverá unos datos u otros */
+    /* Depending on the filter it will return some data or another */
     if (state ==1 ){
       return uploaded_data;
     }else if (state == 2){
@@ -189,7 +188,6 @@ export default function App() {
     setPage(1)
   },[])
 
-  //Contenido de arriba de la tabla
   const topContent = React.useMemo(() => {
     return(
       <div>
@@ -199,14 +197,13 @@ export default function App() {
           onSearchChange={onSearchChange}
           setValue={setValue}
           selectValue={selectValue}
-          selectedKeys={arrayIdentificadoresRef.current}
+          selectedKeys={arrayIdentifiersRef.current}
         />
         {/* Otros componentes y JSX aquí */}
       </div>
     );
-  }, [filterValue, onClear, onSearchChange, setValue, selectValue, arrayIdentificadoresRef.current]);
+  }, [filterValue, onClear, onSearchChange, setValue, selectValue, arrayIdentifiersRef.current]);
 
-  /* Contenido de debajo de la tabla */
   const bottomContent = React.useMemo(() => {
     return (
       <BottomContent
@@ -219,7 +216,7 @@ export default function App() {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length]);
 
-  /* Contenido de la tabla y aspecto */
+  /* Table content and aspect */
   return (
     <div>
     <Table
@@ -265,7 +262,7 @@ export default function App() {
                 <PDFViewer style={{ width: "100%", height: "90vh" }}>
                   <CrearPDF id={identificador} option={optionButton} />
                 </PDFViewer>
-                <Button onClick={() => setIsModalOpen(false)}>Cerrar PDF</Button>
+                <Button onClick={() => setIsModalOpen(false)}>Close PDF</Button>
               </div>
             </div>
           )}

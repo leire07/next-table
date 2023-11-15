@@ -37,8 +37,8 @@ const getFileNameWithoutExtension = (filename: string) => {
   return filename.split('.')[0];
 };
 
-/* URL con toda la informcaión de los componentes: https://react-pdf.org/components#view */
-/* El caso 1 será el pdf para el detailed report y el caso 2 para el summary report */ 
+/* URL with all the information of the components: https://react-pdf.org/components#view */
+/* Case 1 will be the pdf for the detailed report and case 2 for the summary report */ 
 export const CrearPDF = ({ id, option }: CrearPDFProps) => {
   const filteredData = data.filter(item => item.key === id);
   console.log("El documento es:" + Document)
@@ -51,10 +51,10 @@ export const CrearPDF = ({ id, option }: CrearPDFProps) => {
         {/* Mapeo de datos fuera del bloque View */}
         {filteredData.map((item) => (
           <View key={item.key} style={style_pdf.section}>
-            <Text>Paciente: {getFileNameWithoutExtension(item.name)}</Text>
+            <Text>Patient: {getFileNameWithoutExtension(item.name)}</Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Nombre: {" "}
+              Name: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.name}
@@ -62,7 +62,7 @@ export const CrearPDF = ({ id, option }: CrearPDFProps) => {
             </Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Fecha de creación: {" "}
+              Creation date: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.creation_date}
@@ -70,7 +70,7 @@ export const CrearPDF = ({ id, option }: CrearPDFProps) => {
             </Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Fecha de actualización: {" "}
+              Upload date: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.last_update_date}
@@ -90,10 +90,10 @@ export const CrearPDF = ({ id, option }: CrearPDFProps) => {
         {/* Mapeo de datos fuera del bloque View */}
         {filteredData.map((item) => (
           <View key={item.key} style={style_pdf.section}>
-            <Text>Paciente: {getFileNameWithoutExtension(item.name)}</Text>
+            <Text>Patient: {getFileNameWithoutExtension(item.name)}</Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Nombre: {" "}
+              Name: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.name}
@@ -101,7 +101,7 @@ export const CrearPDF = ({ id, option }: CrearPDFProps) => {
             </Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Fecha de creación: {" "}
+              Creation date: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.creation_date}
@@ -109,16 +109,14 @@ export const CrearPDF = ({ id, option }: CrearPDFProps) => {
             </Text>
             <Text style={style_pdf.cell}>
               <Text style={style_pdf.row}>
-              Fecha de actualización: {" "}
+              Upload date: {" "}
             </Text>
             <Text style={style_pdf.row}>
               {item.last_update_date}
             </Text>
             </Text>
-            {/* Agrega más contenido según sea necesario */}
           </View>
         ))}
-        {/* Fin del mapeo de datos */}
       </Page>
     </Document>
     )
